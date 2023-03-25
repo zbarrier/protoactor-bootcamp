@@ -35,6 +35,6 @@ class Program
         system.Root.Send(pid, "The Movie");
         system.Root.Send(pid, 44);
 
-        Console.ReadLine();
+        _ = Console.ReadLine();
     }
 }
