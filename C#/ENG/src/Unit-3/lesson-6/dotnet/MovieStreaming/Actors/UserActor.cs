@@ -5,57 +5,62 @@ using System.Threading.Tasks;
 using MovieStreaming.Messages;
 using Proto;
 
-namespace MovieStreaming.Actors
+namespace MovieStreaming.Actors;
+
+public class UserActor : IActor
 {
-    public class UserActor : IActor
+    private string _currentlyWatching;
+
+    private readonly Behavior _behavior;
+
+    public UserActor()
     {
-        private string _currentlyWatching;
+        Console.WriteLine("Creating a UserActor");
+        ColorConsole.WriteLineCyan("Setting initial behavior to stopped");
+        _behavior = new Behavior(Stopped);
+    }
 
-        private readonly Behavior _behavior;
+    public Task ReceiveAsync(IContext context) => _behavior.ReceiveAsync(context);
 
-        public UserActor()
+    private Task Stopped(IContext context)
+    {
+        switch (context.Message)
         {
-            Console.WriteLine("Creating a UserActor");
-            ColorConsole.WriteLineCyan("Setting initial behavior to stopped");
-            _behavior = new Behavior(Stopped);
+            case Started _:
+                ColorConsole.WriteLineCyan("UserActor has now become Stopped");
+                break;
+            case Stop _:
+                break;
+            case PlayMovieMessage msg:
+                _currentlyWatching = msg.MovieTitle;
+                ColorConsole.WriteLineYellow($"User is currently watching '{_currentlyWatching}'");
+                _behavior.Become(Playing);
+                break;
+            case StopMovieMessage msg:
+                ColorConsole.WriteLineRed("Error: cannot stop if nothing is playing");
+                break;
         }
+        return Task.CompletedTask;
+    }
 
-        public Task ReceiveAsync(IContext context) => _behavior.ReceiveAsync(context);
-
-        private Task Stopped(IContext context)
+    private Task Playing(IContext context)
+    {
+        switch (context.Message)
         {
-            switch (context.Message)
-            {
-                case PlayMovieMessage msg:
-                    _currentlyWatching = msg.MovieTitle;
-                    ColorConsole.WriteLineYellow($"User is currently watching '{_currentlyWatching}'");
-                    _behavior.Become(Playing);
-                    break;
-                case StopMovieMessage msg:
-                    ColorConsole.WriteLineRed("Error: cannot stop if nothing is playing");
-                    break;
-            }
-            ColorConsole.WriteLineCyan("UserActor has now become Stopped");
-
-            return Actor.Done;
-        }
-
-        private Task Playing(IContext context)
-        {
-            switch (context.Message)
-            {
-                case PlayMovieMessage msg:
-                    ColorConsole.WriteLineRed("Error: cannot start playing another movie before stopping existing one");
-                    break;
-                case StopMovieMessage msg:
-                    ColorConsole.WriteLineYellow($"User has stopped watching '{_currentlyWatching}'");
-                    _currentlyWatching = null;
-                    _behavior.Become(Stopped);
-                    break;
-            }
-            ColorConsole.WriteLineCyan("UserActor has now become Playing");
-
-            return Actor.Done;
-        }
+            case Started _:
+                ColorConsole.WriteLineCyan("UserActor has now become Playing");
+                break;
+            case Stop _:
+                break;
+            case PlayMovieMessage msg:
+                ColorConsole.WriteLineRed("Error: cannot start playing another movie before stopping existing one");
+                break;
+            case StopMovieMessage msg:
+                ColorConsole.WriteLineYellow($"User has stopped watching '{_currentlyWatching}'");
+                _currentlyWatching = null;
+                _behavior.Become(Stopped);
+                break;
+        }   
+        return Task.CompletedTask;
     }
 }

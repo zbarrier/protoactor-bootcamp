@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MovieStreaming.Messages
+namespace MovieStreaming.Messages;
+
+public class StopMovieMessage
 {
-    class StopMovieMessage
-    {
-    }
 }
