@@ -28,26 +28,27 @@ public class UserCoordinatorActor : IActor
 
     private void ProcessPlayMovieMessage(IContext context, PlayMovieMessage msg)
     {
-        CreateChildUserIfNotExists(context, msg.UserId);
-        var childActorRef = _users[msg.UserId];
+        var childActorRef = CreateChildUserIfNotExists(context, msg.UserId);
         context.Send(childActorRef, msg);
-    }
-
-    private void CreateChildUserIfNotExists(IContext context, int userId)
-    {
-        if (!_users.ContainsKey(userId))
-        {
-            var props = Props.FromProducer(() => new UserActor(userId));
-            var pid = context.SpawnNamed(props, $"User{userId}");
-            _users.Add(userId, pid);
-            ColorConsole.WriteLineCyan($"UserCoordinatorActor created new child UserActor for {userId} (Total Users: {_users.Count})");
-        }
     }
 
     private void ProcessStopMovieMessage(IContext context, StopMovieMessage msg)
     {
-        CreateChildUserIfNotExists(context, msg.UserId);
-        var childActorRef = _users[msg.UserId];
+        var childActorRef = CreateChildUserIfNotExists(context, msg.UserId);
         context.Send(childActorRef, msg);
+    }
+
+    private PID CreateChildUserIfNotExists(IContext context, int userId)
+    {
+        if (!_users.TryGetValue(userId, out var userPid))
+        {
+            var props = Props.FromProducer(() => new UserActor(userId));
+            userPid = context.SpawnNamed(props, $"User{userId}");
+            _users.Add(userId, userPid);
+
+            ColorConsole.WriteLineCyan($"UserCoordinatorActor created new child UserActor for {userId} (Total Users: {_users.Count})");
+        }
+
+        return userPid;
     }
 }
