@@ -2,63 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MovieStreaming
+namespace MovieStreaming;
+
+public static class ColorConsole
 {
-    public static class ColorConsole
+    public static void WriteLineGreen(string message) => WriteLineColor(message, ConsoleColor.Green);
+    public static void WriteLineYellow(string message) => WriteLineColor(message, ConsoleColor.Yellow);
+    public static void WriteLineRed(string message) => WriteLineColor(message, ConsoleColor.Red);
+    public static void WriteLineCyan(string message) => WriteLineColor(message, ConsoleColor.Cyan);
+    public static void WriteLineGray(string message) => WriteLineColor(message, ConsoleColor.Gray);
+
+    static void WriteLineColor(string message, ConsoleColor color)
     {
-        public static void WriteLineGreen(string message)
-        {
-            var beforeColor = Console.ForegroundColor;
+        var originalColor = Console.ForegroundColor;
 
-            Console.ForegroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = color;
+        Console.WriteLine(message);
 
-            Console.WriteLine(message);
-
-            Console.ForegroundColor = beforeColor;
-        }
-
-        public static void WriteLineYellow(string message)
-        {
-            var beforeColor = Console.ForegroundColor;
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-
-            Console.WriteLine(message);
-
-            Console.ForegroundColor = beforeColor;
-        }
-
-        public static void WriteLineRed(string message)
-        {
-            var beforeColor = Console.ForegroundColor;
-
-            Console.ForegroundColor = ConsoleColor.Red;
-
-            Console.WriteLine(message);
-
-            Console.ForegroundColor = beforeColor;
-        }
-
-        public static void WriteLineCyan(string message)
-        {
-            var beforeColor = Console.ForegroundColor;
-
-            Console.ForegroundColor = ConsoleColor.Cyan;
-
-            Console.WriteLine(message);
-
-            Console.ForegroundColor = beforeColor;
-        }
-
-        public static void WriteLineGray(string message)
-        {
-            var beforeColor = Console.ForegroundColor;
-
-            Console.ForegroundColor = ConsoleColor.Gray;
-
-            Console.WriteLine(message);
-
-            Console.ForegroundColor = beforeColor;
-        }
+        Console.ForegroundColor = originalColor;
     }
 }

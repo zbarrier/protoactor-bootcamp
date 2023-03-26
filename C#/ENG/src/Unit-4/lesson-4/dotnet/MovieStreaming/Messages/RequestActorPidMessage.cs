@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MovieStreaming.Messages
-{
-    public class RequestActorPidMessage
-    {
-        public string ActorName { get; }
+namespace MovieStreaming.Messages;
 
-        public RequestActorPidMessage(string actorName)
-        {
-            ActorName = actorName;
-        }
+public class RequestActorPidMessage
+{
+    public string ActorName { get; }
+
+    public RequestActorPidMessage(string actorName)
+    {
+        ActorName = actorName;
     }
 }

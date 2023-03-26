@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using Proto;
 
-namespace MovieStreaming.Messages
-{
-    public class PlayMovieMessage
-    {
-        public string MovieTitle { get; }
+namespace MovieStreaming.Messages;
 
-        public int UserId { get; }
-        public PlayMovieMessage(string movieTitle, int userId)
-        {
-            MovieTitle = movieTitle;
-            UserId = userId;
-        }
+public class PlayMovieMessage
+{
+    public string MovieTitle { get; }
+    public int UserId { get; }
+
+    public PlayMovieMessage(string movieTitle, int userId)
+    {
+        MovieTitle = movieTitle;
+        UserId = userId;
     }
 }

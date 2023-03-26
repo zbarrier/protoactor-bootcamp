@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MovieStreaming.Messages
-{
-    public class StopMovieMessage
-    {
-        public int UserId { get; }
+namespace MovieStreaming.Messages;
 
-        public StopMovieMessage(int userId)
-        {
-            UserId = userId;
-        }
+public class StopMovieMessage
+{
+    public int UserId { get; }
+
+    public StopMovieMessage(int userId)
+    {
+        UserId = userId;
     }
 }

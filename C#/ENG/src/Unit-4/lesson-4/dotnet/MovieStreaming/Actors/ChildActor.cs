@@ -3,33 +3,32 @@ using System.Threading.Tasks;
 using MovieStreaming.Messages;
 using Proto;
 
-namespace MovieStreaming.Actors
+namespace MovieStreaming.Actors;
+
+public class ChildActor : IActor
 {
-    public class ChildActor : IActor
+    public Task ReceiveAsync(IContext context)
     {
-        public Task ReceiveAsync(IContext context)
+        switch (context.Message)
         {
-            switch (context.Message)
-            {
-                case Restarting msg:
-                    ProcessRestartingMessage(msg);
-                    break;
+            case Restarting msg:
+                ProcessRestartingMessage(msg);
+                break;
 
-                case Recoverable msg:
-                    ProcessRecoverableMessage(msg);
-                    break;
-            }
-            return Actor.Done;
+            case Recoverable msg:
+                ProcessRecoverableMessage(msg);
+                break;
         }
+        return Task.CompletedTask;
+    }
 
-        private void ProcessRecoverableMessage(Recoverable msg)
-        {
-            throw new Exception();
-        }
+    private void ProcessRecoverableMessage(Recoverable msg)
+    {
+        throw new Exception();
+    }
 
-        private void ProcessRestartingMessage(Restarting msg)
-        {
-            ColorConsole.WriteLineGreen("ChildActor Restarting");
-        }
+    private void ProcessRestartingMessage(Restarting msg)
+    {
+        ColorConsole.WriteLineGreen("ChildActor Restarting");
     }
 }
